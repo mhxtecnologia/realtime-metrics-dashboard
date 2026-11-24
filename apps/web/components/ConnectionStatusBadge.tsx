@@ -14,7 +14,8 @@ export function ConnectionStatusBadge() {
     <p className="status-badge" data-status={status} data-testid="connection-status">
       <span className="status-dot" aria-hidden="true" />
       <span className="status-badge__label">{STATUS_LABEL[status]}</span>
-      {detail !== null && <span className="status-badge__detail">({detail})</span>}
+      {/* Espaço real no texto: o `gap` do CSS não separa as palavras para o leitor de tela. */}
+      {detail !== null && <span className="status-badge__detail"> ({detail})</span>}
     </p>
   );
 }
