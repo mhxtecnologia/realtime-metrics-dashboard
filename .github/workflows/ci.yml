@@ -1,0 +1,61 @@
+# Integração contínua: lint, tipos, testes, build e e2e com axe; depois a imagem
+# Docker sobe pelo Compose e passa por um smoke test.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Lint, typecheck, test, build and e2e
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - name: Install Playwright Chromium
+        run: pnpm --filter @realtime-metrics/web exec playwright install --with-deps chromium
+      - run: pnpm e2e
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report
+          retention-days: 7
+
+  docker:
+    name: Docker Compose smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and start the stack
+        run: docker compose up --build --detach --wait --wait-timeout 300
+      - name: Smoke test
+        run: |
+          curl -fsS http://localhost:4000/healthz
+          curl -fsS http://localhost:3000/ | grep -q 'Realtime metrics'
+          curl -fsSI http://localhost:3000/ | grep -qi '^content-security-policy:'
+      - name: Logs on failure
+        if: failure()
+        run: docker compose logs
+      - name: Stop the stack
+        if: always()
+        run: docker compose down

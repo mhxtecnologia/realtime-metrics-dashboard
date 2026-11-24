@@ -1,0 +1,32 @@
+{
+  "name": "realtime-metrics-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "packageManager": "pnpm@10.15.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter \"./apps/*\" dev",
+    "lint": "eslint . && pnpm --filter @realtime-metrics/web lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "build": "pnpm -r build",
+    "e2e": "pnpm --filter @realtime-metrics/web e2e"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.30.0",
+    "eslint": "^9.30.0",
+    "typescript": "^5.8.0",
+    "typescript-eslint": "^8.35.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "react-is": "^19.1.0"
+    },
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

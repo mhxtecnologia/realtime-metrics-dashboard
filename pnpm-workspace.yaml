@@ -1,0 +1,4 @@
+# Monorepo: o app web, o servidor WebSocket e o contrato compartilhado entre os dois.
+packages:
+  - apps/*
+  - packages/*

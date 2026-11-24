@@ -1,0 +1,405 @@
+/* Tokens de cor: todo par texto/fundo passa de 4.5:1 (WCAG 1.4.3) nos dois temas. */
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --text: #14171a;
+  --muted: #4b5563;
+  --border: #c9ced6;
+  --focus: #1d4ed8;
+  --accent: #1d4ed8;
+  --accent-text: #ffffff;
+  --live-fg: #14532d;
+  --live-bg: #dcfce7;
+  --live-dot: #15803d;
+  --connecting-fg: #1e3a8a;
+  --connecting-bg: #dbeafe;
+  --reconnecting-fg: #78350f;
+  --reconnecting-bg: #fef3c7;
+  --offline-fg: #7f1d1d;
+  --offline-bg: #fee2e2;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0f1216;
+  --surface: #171b21;
+  --text: #e8eaed;
+  --muted: #a7b0bc;
+  --border: #3a4250;
+  --focus: #93c5fd;
+  --accent: #93c5fd;
+  --accent-text: #0f1216;
+  --live-fg: #bbf7d0;
+  --live-bg: #12351f;
+  --live-dot: #4ade80;
+  --connecting-fg: #bfdbfe;
+  --connecting-bg: #132a4a;
+  --reconnecting-fg: #fde68a;
+  --reconnecting-bg: #3d2c06;
+  --offline-fg: #fecaca;
+  --offline-bg: #421515;
+}
+
+/* Sem JavaScript (ou antes do script de tema), segue o sistema. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --bg: #0f1216;
+    --surface: #171b21;
+    --text: #e8eaed;
+    --muted: #a7b0bc;
+    --border: #3a4250;
+    --focus: #93c5fd;
+    --accent: #93c5fd;
+    --accent-text: #0f1216;
+    --live-fg: #bbf7d0;
+    --live-bg: #12351f;
+    --live-dot: #4ade80;
+    --connecting-fg: #bfdbfe;
+    --connecting-bg: #132a4a;
+    --reconnecting-fg: #fde68a;
+    --reconnecting-bg: #3d2c06;
+    --offline-fg: #fecaca;
+    --offline-bg: #421515;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  margin: 0 auto;
+  max-width: 1280px;
+  padding: 1rem;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  margin: 0 0 0.25rem;
+}
+
+h1 {
+  font-size: 1.75rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+h3 {
+  font-size: 1.1rem;
+}
+
+p {
+  margin: 0;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* Foco sempre visível, com contraste de 3:1 contra o fundo (WCAG 2.4.7 e 2.4.13). */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+main:focus {
+  outline: none;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: var(--accent-text);
+  border-radius: 0.375rem;
+  font-weight: 600;
+  z-index: 10;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+
+.app-header__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* Alvos de toque com pelo menos 24x24 px (WCAG 2.5.8). */
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.25rem;
+  padding: 0.375rem 0.875rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
+
+.button[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+
+.button__icon {
+  font-size: 0.75rem;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.25rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.status-badge[data-status='connecting'] {
+  color: var(--connecting-fg);
+  background: var(--connecting-bg);
+}
+
+.status-badge[data-status='live'] {
+  color: var(--live-fg);
+  background: var(--live-bg);
+}
+
+.status-badge[data-status='reconnecting'] {
+  color: var(--reconnecting-fg);
+  background: var(--reconnecting-bg);
+}
+
+.status-badge[data-status='offline'] {
+  color: var(--offline-fg);
+  background: var(--offline-bg);
+}
+
+.status-badge__detail {
+  font-weight: 400;
+}
+
+.status-dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-badge[data-status='live'] .status-dot {
+  background: var(--live-dot);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.segmented {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.segmented__legend {
+  float: left;
+  margin-right: 0.5rem;
+  font-weight: 600;
+}
+
+.segmented__option {
+  position: relative;
+}
+
+/* O rádio fica invisível mas focável; o foco aparece no rótulo ao lado. */
+.segmented__option input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.segmented__option span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  background: var(--surface);
+}
+
+.segmented__option input:checked + span {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+
+.segmented__option input:focus-visible + span {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.summary {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 1rem;
+  margin: 0 0 1rem;
+}
+
+.kpi {
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+}
+
+.kpi dt {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.kpi dd {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
+  gap: 1rem;
+}
+
+.panel {
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  min-width: 0;
+}
+
+.chart {
+  margin-block: 0.75rem;
+}
+
+.panel__table summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.table-wrap {
+  max-height: 18rem;
+  overflow: auto;
+  margin-top: 0.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+caption {
+  text-align: left;
+  color: var(--muted);
+  padding-bottom: 0.25rem;
+}
+
+th,
+td {
+  padding: 0.25rem 0.5rem;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+}
+
+th:first-child {
+  text-align: left;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+}
+
+/* Quem pede menos movimento não vê pulsos, transições nem animações. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
